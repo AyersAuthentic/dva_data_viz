@@ -36,17 +36,20 @@ navbar = dbc.Navbar(id = 'navbar', children = [
     
 ])
 
-
-
+month_years = ['01/2020', '02/2020', '03/2020', '04/2020', '05/2020', '06/2020', 
+'07/2020', '08/2020', '09/2020', '10/2020', '11/2020', '12/2020',
+'01/2021', '02/2021', '03/2021', '04/2021', '05/2021', '06/2021', 
+'07/2021', '08/2021', '09/2021', '10/2021', '11/2021', '12/2021'
+]
 
 
 body = dbc.Container([
 
     dbc.Row([
         dcc.Graph(id='covid_graph_1', figure = {}),
-        dcc.Dropdown(id='covid_graph_1_drop', multi=True, value='01/2020',
+        dcc.Dropdown(id='covid_graph_1_drop', multi=False, value='01/2020',
                          options=[{'label':x, 'value':x}
-                                  for x in sorted(df['month_year'].unique())],
+                                  for x in month_years],
                          )
     ])
 
@@ -66,10 +69,10 @@ def update_graph(month_year):
 
     fig = px.choropleth(dff, locations='state', color='new_case_per',
                            color_continuous_scale="ylorbr",
-                           range_color=(df['new_case_per'].min(), dff['new_case_per'].max()),
+                           range_color=(dff['new_case_per'].min(), dff['new_case_per'].max()),
                            locationmode="USA-states",
                            scope="usa",
-                           labels={'new_case_per':'cases per 100 thousand'}
+                           labels={'new_case_per':'New Cases Per 100 Thousand'}
                           )
 
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
