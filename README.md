@@ -1,4 +1,4 @@
-# COVID-19-Remote-Work
+# COVID-19 Remote Work
 
 ## Getting Started
 - Install Conda, navigate to the directory with the `environment.yml` file, then use the command `conda env create --name envname --file=environment.yml`.
