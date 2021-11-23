@@ -55,7 +55,7 @@ body = dbc.Container([
 
 ])
 
-app.layout = html.Div(id = 'parant', children = [navbar, body])
+app.layout = html.Div(id = 'parent', children = [navbar, body])
 
 
 # Callbacks
