@@ -9,3 +9,7 @@ Activate this environment with `conda activate envname`
 
 ## Dash (Data Visualization)
 - Run `choropleth.py`
+
+## Models
+- Run `mental_health_clf.py`
+- If you would like to retrain the model, pass in the command line argument `train_rf` or `train_xgb`, when you run the script
