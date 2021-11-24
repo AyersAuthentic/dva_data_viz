@@ -12,4 +12,4 @@ Activate this environment with `conda activate envname`
 
 ## Models
 - Run `mental_health_clf.py`
-- If you would like to retrain the model, pass in the command line argument `train_rf` or `train_xgb`, when you run the script
+- If you would like to retrain the model, pass in the optional command line argument `--train rf` or `--train xgb`, when you run the script

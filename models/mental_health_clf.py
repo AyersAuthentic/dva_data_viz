@@ -9,17 +9,17 @@ from xgboost import XGBClassifier
 
 # Parse Command Line Arguments
 parser = argparse.ArgumentParser(description='COVID - Mental Health Classifier')
-parser.add_argument('train', type=str)
+parser.add_argument('--train', type=str, required=False)
 args = parser.parse_args()
 
 
 def mental_health_clf():
 
-    # df = pd.read_csv('https://storage.googleapis.com/additional-data/cleaned_datasets/CMaster2_HPS_CDC_CPS_Vaccinated.csv')
-    df = pd.read_csv('../data/CMaster2_HPS_CDC_CPS_Vaccinated.csv')
-    df = df[['INCOME', 'WRKLOSS', 'MORTCONF', 'MORTLMTH', 'KINDWORK', 'CDCCOUNT', 'DOWN']]
+    df = pd.read_csv('https://storage.googleapis.com/additional-data/CummulatedClean_Nov22_with_lock/0_CMaster2_HPS_CDC_CPS_Vaccinated_with_lock.csv')
+    print(df.columns)
+    df = df[['INCOME', 'WRKLOSS', 'MORTCONF', 'MORTLMTH', 'KINDWORK', 'CDCCOUNT', 'ANXIOUS', 'WORRY', 'lockdown', 'DOWN']]
 
-    # Drop Missing Values and NaNs
+    # Drop Missing Values and NaNs  
     for col in df.columns:
         df.drop(df[df[col] == -88].index, inplace=True)
         df.drop(df[df[col] == -99].index, inplace=True)
@@ -46,18 +46,21 @@ def mental_health_clf():
             'KINDWORK_3',
             'KINDWORK_4',
             'KINDWORK_5',
+            'ANXIOUS',
+            'WORRY',
+            'lockdown',
             'DOWN']
 
     df = df[cols]
 
     # Train Test Split
-    X_train, X_test, y_train, y_test = train_test_split(df.iloc[:, :10],
+    X_train, X_test, y_train, y_test = train_test_split(df.iloc[:, :13],
                                                         df.iloc[:, -1],
                                                         test_size=0.20,
                                                         random_state=42)
 
     # If command line flag is set, train RF.
-    if args.train == 'train_rf':
+    if args.train == 'rf':
         print(f'Training Random Forest model...')
 
         # Hyperparameter Ranges for tuning
@@ -79,7 +82,7 @@ def mental_health_clf():
             pickle.dump(clf, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     # If command line flag is set, train XGB.
-    elif args.train == 'train_xgb':
+    elif args.train == 'xgb':
         print(f'Training XGB model...')
 
         # Hyperparameter Ranges for tuning
