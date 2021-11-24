@@ -47,7 +47,7 @@ body = dbc.Container([
 
     dbc.Row([
         dcc.Graph(id='covid_graph_1', figure = {}),
-        dcc.Dropdown(id='covid_graph_1_drop', multi=False, value='01/2020',
+        dcc.Dropdown(id='covid_graph_1_drop', multi=False, value='10/2020',
                          options=[{'label':x, 'value':x}
                                   for x in month_years],
                          )
