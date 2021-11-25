@@ -8,17 +8,18 @@ import plotly.express as px
 import numpy as np
 from datetime import date
 from dash.dependencies import Input,Output
-import dash_table
 from urllib.request import urlopen
 import json
 import csv
 import plotly.graph_objs as go
 
 
-df = pd.read_csv('https://storage.googleapis.com/additional-data/newCummulatedClean/new_CMaster_HPS_CDC_CPS_NYC_Vaccinated.csv')
+df = pd.read_csv('https://storage.googleapis.com/additional-data/CummulatedClean_Nov22_with_lock/0_CMaster2_HPS_CDC_CPS_Vaccinated_with_lock.csv')
 
-states = df.STATE_CODE.unique()
+states = df.STATE.unique()
+
 states_list = list(states)
+print(states_list)
 states_list.pop(-20)
 print(states_list)
 states_with_all = states_list.copy()
@@ -46,8 +47,8 @@ body  = html.Div([
     dcc.Checklist(
         id='attributes',
         options=[{'label': x, 'value': x} 
-                 for x in df.columns],
-        value=['people_vaccinated_per_hundred','cases_avg_per_100k'],
+                 for x in df.columns[7:]],
+        value=['people_vaccinated_per_hundred','CDCCOUNT'],
     ),
     dcc.Dropdown(id='state_drop', multi=True, value='CA',
                     options=[{'label':x, 'value':x}
@@ -74,10 +75,11 @@ def filter_heatmap(cols, states):
             selected_states = [states]
 
     print(selected_states)
-    dff = df[df['STATE_CODE'].isin(selected_states)]
+    dff = df[df['STATE'].isin(selected_states)]
     print(dff.head())
     dff = dff[cols]
     corr_mat = dff.corr()
+    print(corr_mat)
     fig = go.Figure(data=go.Heatmap(
                    z=corr_mat,
                    x=cols,
