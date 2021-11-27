@@ -19,7 +19,11 @@ with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-c
 df = pd.read_csv("https://storage.googleapis.com/additional-data/data_viz_data/trends/counties_with_fips.csv", dtype={"fips": str})
 df_2 = pd.read_csv("https://storage.googleapis.com/additional-data/data_viz_data/trends/lock_clean.csv", dtype={"fips": str})
 df_3 = pd.read_csv("https://storage.googleapis.com/additional-data/data_viz_data/trends/master_viz_test.csv")
-
+df_4 = pd.read_csv("https://storage.googleapis.com/additional-data/data_viz_data/trends/master_viz_test_2.csv")
+print(df.head(5))
+print(df_2.head(5))
+print(df_3.head(5))
+print(df_4.head(5))
 trends = ['WRKLOSS', 'KINDWORK', 'MORTLMTH', 'MORTCONF',
        'INCOME', 'CDCCOUNT', 'REMPCT', 'people_vaccinated',
        'people_vaccinated_per_hundred', 'people_fully_vaccinated',
@@ -48,39 +52,56 @@ navbar = dbc.Navbar(id = 'navbar', children = [
 body = dbc.Container([
 
     dbc.Row([
-        dcc.Graph(id='covid_graph_1', figure = {}),
-        dcc.DatePickerSingle(
-        id='my-date-picker-single',
-        min_date_allowed=date(2020, 1, 21),
-        max_date_allowed=date(2021, 9, 29),
-        initial_visible_month=date(2020, 1, 21),
-        date=date(2020, 1, 21)
-    )
+
+        dcc.Dropdown(id='trends_dropdown_X', multi=False, value='people_vaccinated_per_hundred',
+                     options=[{'label': x, 'value': x}
+                              for x in trends],
+                     ),
+        dcc.Graph(id='covid_trends_X', figure={})
+
     ]),
     dbc.Row([
-        dcc.Graph(id='covid_lockdowns', figure = {}),
-        dcc.DatePickerSingle(
-        id='my-date-picker-single_2',
-        min_date_allowed=date(2020, 3, 15),
-        max_date_allowed=date(2021, 9, 29),
-        initial_visible_month=date(2020, 3, 15),
-        date=date(2020, 3, 15)
-    )
-    ]),
-     dbc.Row([
-        dcc.Graph(id='covid_trends_1', figure = {}),
+
         dcc.Dropdown(id='trends_dropdown', multi=False, value='people_vaccinated_per_hundred',
-                         options=[{'label':x, 'value':x}
-                                  for x in trends],
-                         ),
+                     options=[{'label': x, 'value': x}
+                              for x in trends],
+                     ),
         dcc.Dropdown(id='trends_dropdown_2', multi=False, value='10/2020',
-                        options=[{'label':x, 'value':x}
-                                for x in month_year],
-                        )
-    
+                     options=[{'label': x, 'value': x}
+                              for x in month_year],
+                     ),
+        dcc.Graph(id='covid_trends_1', figure={})
+
+    ]),
+
+    dbc.Row([
+        dbc.Col([
+dcc.DatePickerSingle(
+            id='my-date-picker-single',
+            min_date_allowed=date(2020, 1, 21),
+            max_date_allowed=date(2021, 9, 29),
+            initial_visible_month=date(2020, 1, 21),
+            date=date(2020, 1, 21)
+        ),
+            dcc.Graph(id='covid_graph_1', figure = {})
+        ], #width={'size':6,'offset':1,'order':1}
+            xs=12, sm=12, md=12, lg=6, xl=6
+        ),
+        dbc.Col([
+            dcc.DatePickerSingle(
+            id='my-date-picker-single_2',
+            min_date_allowed=date(2020, 3, 15),
+            max_date_allowed=date(2021, 9, 29),
+            initial_visible_month=date(2020, 3, 15),
+            date=date(2020, 3, 15)
+            ),
+            dcc.Graph(id='covid_lockdowns', figure = {})
+        ], #width={'size':4,'offset':1,'order':2}
+            xs=12, sm=12, md=12, lg=6, xl=6
+        )
     ])
 
-])
+],fluid=False)
 
 app.layout = html.Div(id = 'parent', children = [navbar, body])
 
@@ -141,26 +162,22 @@ def update_output(date_value):
 
 
 @app.callback(
-    Output('covid_trends_1', 'figure'),
-    [Input('trends_dropdown', 'value'),
-    Input('trends_dropdown_2', 'value')]
-
+    Output('covid_trends_X', 'figure'),
+    Input('trends_dropdown_X', 'value')
 )
-def update_graph(trend, month_year):
-    print(month_year)
-  
+def update_graph(trend):
+    print(trend)
+    print(df_4.shape)
 
-    dff = df_3[df_3['month_year'] == month_year]
-    print("selected")
-    print(dff.head())
-
-    dff = dff[['STATE_CODE', trend]]
+    dff = df_4[['year_month','STATE_CODE', trend]]
     print(dff)
 
     fig = px.choropleth(dff, locations='STATE_CODE', color=dff[trend],
                             color_continuous_scale="ylorbr",
                             range_color=(dff[trend].min(), dff[trend].max()),
                             locationmode="USA-states",
+                            animation_group="year_month",
+                            animation_frame="year_month",
                             scope="usa",
                             labels={trend : trend}
                             )
@@ -171,8 +188,34 @@ def update_graph(trend, month_year):
     return fig
 
 
+@app.callback(
+    Output('covid_trends_1', 'figure'),
+    [Input('trends_dropdown', 'value'),
+     Input('trends_dropdown_2', 'value')]
 
+)
+def update_graph(trend, month_year):
+    print(month_year)
+    print(df_3.shape)
 
+    dff = df_3[df_3['month_year'] == month_year]
+    print("selected")
+    print(dff.head())
+
+    dff = dff[['STATE_CODE', trend]]
+    print(dff)
+
+    fig = px.choropleth(dff, locations='STATE_CODE', color=dff[trend],
+                        color_continuous_scale="ylorbr",
+                        range_color=(dff[trend].min(), dff[trend].max()),
+                        locationmode="USA-states",
+                        scope="usa",
+                        labels={trend: trend}
+                        )
+
+    fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+
+    return fig
 
 
 if __name__=='__main__':
