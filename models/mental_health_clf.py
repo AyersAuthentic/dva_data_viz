@@ -5,6 +5,8 @@ import argparse
 
 from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.utils import shuffle
+from imblearn.under_sampling import RandomUnderSampler
 from xgboost import XGBClassifier
 
 # Parse Command Line Arguments
@@ -19,7 +21,7 @@ def mental_health_clf():
     print(df.columns)
     df = df[['INCOME', 'WRKLOSS', 'MORTCONF', 'MORTLMTH', 'KINDWORK', 'CDCCOUNT', 'ANXIOUS', 'WORRY', 'lockdown', 'DOWN']]
 
-    # Drop Missing Values and NaNs  
+    # Drop Missing Values and NaNs
     for col in df.columns:
         df.drop(df[df[col] == -88].index, inplace=True)
         df.drop(df[df[col] == -99].index, inplace=True)
@@ -35,6 +37,17 @@ def mental_health_clf():
     # Binarize - WRKLOSS - No=0, Yes=1
     df['WRKLOSS'] = df['WRKLOSS'].replace(to_replace=2, value=0)
 
+    # Add Mental Stress Index
+    df['MSI'] = df['WORRY'] + df['DOWN'] + df['ANXIOUS']
+
+    print(f'Value Counts: {df["MSI"].value_counts(normalize=True)}')
+
+    # Compress mental health outcome to binary
+    df['MSI'] = np.where(df['MSI'] >= 7, 1, 0)
+
+    # Drop unnecessary components
+    df.drop(columns=['ANXIOUS', 'WORRY', 'DOWN'])
+
     # Reorder df columns
     cols = ['INCOME',
             'WRKLOSS',
@@ -46,16 +59,19 @@ def mental_health_clf():
             'KINDWORK_3',
             'KINDWORK_4',
             'KINDWORK_5',
-            'ANXIOUS',
-            'WORRY',
             'lockdown',
-            'DOWN']
+            'MSI']
 
     df = df[cols]
 
+    # Undersample to balance class distributions
+    undersamp = RandomUnderSampler(sampling_strategy='majority')
+    X, y = undersamp.fit_resample(df.iloc[:, :11], df.iloc[:, -1])
+    X, y, = shuffle(X, y)
+
     # Train Test Split
-    X_train, X_test, y_train, y_test = train_test_split(df.iloc[:, :13],
-                                                        df.iloc[:, -1],
+    X_train, X_test, y_train, y_test = train_test_split(X,
+                                                        y,
                                                         test_size=0.20,
                                                         random_state=42)
 
@@ -81,6 +97,9 @@ def mental_health_clf():
         with open('mental_health_clf.pickle', 'wb') as handle:
             pickle.dump(clf, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
+        print(clf.best_params_)
+        print(f'Classification Accuracy (Test Set): {clf.score(X_test, y_test)}')
+
     # If command line flag is set, train XGB.
     elif args.train == 'xgb':
         print(f'Training XGB model...')
@@ -104,12 +123,15 @@ def mental_health_clf():
         with open('mental_health_clf.pickle', 'wb') as handle:
             pickle.dump(clf, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
+        print(clf.best_params_)
+        print(f'Classification Accuracy (Test Set): {clf.score(X_test, y_test)}')
+
     else:
         with open('mental_health_clf.pickle', 'rb') as handle:
             clf = pickle.load(handle)
 
-    print(clf.best_params_)
-    print(f'Classification Accuracy (Test Set): {clf.score(X_test, y_test)}')
+        print(clf.best_params_)
+        print(f'Classification Accuracy (Test Set): {clf.score(X_test, y_test)}')
 
 
 if __name__ == '__main__':
