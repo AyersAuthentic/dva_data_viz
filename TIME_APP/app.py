@@ -14,45 +14,70 @@ import csv
 import plotly.graph_objs as go
 
 
-df = pd.read_csv('https://storage.googleapis.com/additional-data/CummulatedClean_Nov22_with_lock/0_CMaster2_HPS_CDC_CPS_Vaccinated_with_lock.csv')
-
-states = df.STATE.unique()
-
-states_list = list(states)
-print(states_list)
-states_list.pop(-20)
-print(states_list)
-states_with_all = states_list.copy()
-states_with_all.append('ALL')
-print(states_with_all)
+df = pd.read_csv('https://storage.googleapis.com/additional-data/data_viz_data/timeseries/normalized_time_series_values.csv', dtype={"state_fips": str})
+df = df.sort_values(by='date')
 
 app = dash.Dash(external_stylesheets = [ dbc.themes.COSMO],)
 
 
+state_dict = state_codes = {
+    'WA': '53', 'DE': '10', 'DC': '11', 'WI': '55', 'WV': '54', 'HI': '15',
+    'FL': '12', 'WY': '56', 'PR': '72', 'NJ': '34', 'NM': '35', 'TX': '48',
+    'LA': '22', 'NC': '37', 'ND': '38', 'NE': '31', 'TN': '47', 'NY': '36',
+    'PA': '42', 'AK': '02', 'NV': '32', 'NH': '33', 'VA': '51', 'CO': '08',
+    'CA': '06', 'AL': '01', 'AR': '05', 'VT': '50', 'IL': '17', 'GA': '13',
+    'IN': '18', 'IA': '19', 'MA': '25', 'AZ': '04', 'ID': '16', 'CT': '09',
+    'ME': '23', 'MD': '24', 'OK': '40', 'OH': '39', 'UT': '49', 'MO': '29',
+    'MN': '27', 'MI': '26', 'RI': '44', 'KS': '20', 'MT': '30', 'MS': '28',
+    'SC': '45', 'KY': '21', 'OR': '41', 'SD': '46'
+}
+
+states_list = [ 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
+           'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
+           'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM',
+           'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
+           'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY', 'ALL']
+
+features = ['Covid Cases Per 100k', 'Covid Deaths Per 100k', 
+            'People Vaccinated Per 100k', 
+            'People Fully Vaccinated Per 100k',
+            'Levels of Lockdown',
+            'Mortgage Confidence', 'Anxiety Levels',
+            'Worry Levels', 'Depression Level',
+            'Remote Work Percentage']
+
+feature_dict = {'Covid Cases Per 100k': 'cases_avg_per_100k',
+             'Covid Deaths Per 100k': 'deaths_avg_per_100k ', 
+            'People Vaccinated Per 100k': 'people_vaccinated_per_hundred', 
+            'People Fully Vaccinated Per 100k': 'people_fully_vaccinated_per_hundred',
+            'Levels of Lockdown': 'lockdown',
+            'Mortgage Confidence':'MORTCONF', 
+            'Anxiety Levels':'ANXIOUS',
+            'Worry Levels' : 'WORRY', 
+            'Depression Level': 'DOWN',
+            'Remote Work Percentage': 'REMPCT'}
 
 
 navbar = dbc.Navbar(id = 'navbar', children = [
 
-        dbc.Col(html.H1("Data Correlations Heatmap Analysis",
+        dbc.Col(html.H1("Covid Time Series Analysis",
                         className='text-center text-primary mb=4'
         ), width=12)
     
 ])
 
 
-
-
 body  = html.Div([
-    html.P("Attributes Included:"),
+    html.P("Import Features of Covid 19:"),
     dcc.Checklist(
         id='attributes',
         options=[{'label': x, 'value': x} 
-                 for x in df.columns[7:]],
-        value=['people_vaccinated_per_hundred','CDCCOUNT'],
+                 for x in features],
+        value=['Covid Cases Per 100k','People Fully Vaccinated Per 100k'],
     ),
     dcc.Dropdown(id='state_drop', multi=True, value='CA',
                     options=[{'label':x, 'value':x}
-                            for x in states_with_all],
+                            for x in states_list],
                     ),
     dcc.Graph(id="graph", figure={}),
 ])
@@ -65,26 +90,46 @@ app.layout = html.Div(id = 'parant', children = [navbar, body])
     [Input("attributes", "value"),
     Input("state_drop", "value")])
 def filter_heatmap(cols, states):
-    selected_states = []
-    if 'ALL' in states:
-        selected_states = states_list
-    else:
-        if isinstance(states, list):
-            selected_states = states
-        else:
-            selected_states = [states]
+    print("SELECTED")
+    print(cols)
+    print(states)
 
-    print(selected_states)
-    dff = df[df['STATE'].isin(selected_states)]
+    if isinstance(states, list):
+        states = states
+    else:
+        states = [states]
+    print(states)
+    state_code_list = []
+    if 'ALL' in states:
+        state_code_list = state_dict.values()
+    else:
+        for state in states:
+            state_code_list.append(state_dict[state])
+    print("STATE CODE LIST")
+    print(state_code_list)
+    print(df.dtypes)
+
+    dff = df[df['state_fips'].isin(state_code_list)]
+
     print(dff.head())
-    dff = dff[cols]
-    corr_mat = dff.corr()
-    print(corr_mat)
-    fig = go.Figure(data=go.Heatmap(
-                   z=corr_mat,
-                   x=cols,
-                   y=cols,
-                   hoverongaps = False))
+
+    selected_cols = []
+    for col in cols:
+        selected_cols.append(feature_dict[col])
+    print("SELECTED COL CODES")
+    print(selected_cols)
+
+    cols_with_date = ['date']
+
+    for col in selected_cols:
+        cols_with_date.append(col)
+    print('Cols with date')
+    print(cols_with_date)
+    
+    dff = dff[cols_with_date]
+  
+    fig = px.line(dff, x="date", y=selected_cols, title='Normalized Levels of Covid Features')
+
 
     return fig
 
