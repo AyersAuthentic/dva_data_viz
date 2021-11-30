@@ -64,8 +64,18 @@ python app.py
 ```
 
 ## Deploy Microservce Applications to Google Cloud
+- Deployment to the Google Cloud run serverless cloud is facilitated by a Docker container image from within each microservice application file. To submit and deploy each microservice application create a new google cloud project and install the google cloud SDK on your local machine. Once the SDK is installed, enter the application directory and run the console commands below:
+
+- GCC SDK installation instructions:  https://cloud.google.com/sdk/docs/install
 
 
+```console
+cd (SERVICE)_APP 
+gcloud builds submit --tag gcr.io/(GCC-PROJECT-NAME-ID)/app  --project=GCC-PROJECT-NAME-ID 
+
+gcloud run deploy --image gcr.io/(GCC-PROJECT-NAME-ID)/app --platform managed  --project=(GCC-PROJECT-NAME-ID) --allow-unauthenticated
+
+```
 
 
 
