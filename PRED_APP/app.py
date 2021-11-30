@@ -1,20 +1,12 @@
 import dash
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-import requests
-import pandas as pd
 import dash_core_components as dcc
-import plotly.express as px
-import numpy as np
-from datetime import date
-from dash.dependencies import Input,Output, State
-from urllib.request import urlopen
-import json
-import csv
-import plotly.graph_objs as go
-
-from numpy import radians, cos, sin
+from dash.dependencies import Input, Output
 import plotly.graph_objects as go
+
+import pandas as pd
+import numpy as np
 import pickle
 
 app = dash.Dash(external_stylesheets = [ dbc.themes.COSMO],)
@@ -111,15 +103,11 @@ def update_barchart(income, wrkloss, mortconf, mortlmth, lockdown):
 
     features = np.array([income, wrkloss, mortconf, mortlmth, lockdown])
     features[features == None] = 0  # Convert Nones to 0, for when the dropdown option is not selected
-    print(features)
 
     with open('../models/mental_health_rgr.pickle', 'rb') as handle:
         rgr = pickle.load(handle)
 
-    print(f'features: {features}')
-    print(type(features))
-
-    # Check if all zeros. If so, prediction = 0
+    # Check if all zeros. If so, prediction = 0. Else call Regression model's predict.
     is_all_zero = not np.any(features)
     if is_all_zero:
         prediction = 0
@@ -139,15 +127,7 @@ def update_barchart(income, wrkloss, mortconf, mortlmth, lockdown):
                       columns=["Features", "Level", "CDC"])
 
     print(df)
-    """
-    fig = px.bar(df, x = "Features", y="Level"
-            #,animation_group = "Features"
-            #,animation_frame = "Pos"
-                 , color="Level"
-                 ,range_y=[0,25]
-                 )
-    fig.update_layout(margin={"r":0,"t":10,"l":0,"b":0})
-    """
+
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
         value=prediction,
@@ -174,6 +154,6 @@ def update_barchart(income, wrkloss, mortconf, mortlmth, lockdown):
     return fig
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     app.run_server(debug=True)
 
