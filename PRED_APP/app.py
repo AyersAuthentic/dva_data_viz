@@ -15,12 +15,9 @@ import plotly.graph_objs as go
 
 from numpy import radians, cos, sin
 import plotly.graph_objects as go
-
-
+import pickle
 
 app = dash.Dash(external_stylesheets = [ dbc.themes.COSMO],)
-
-
 
 navbar = dbc.Navbar(id = 'navbar', children = [
 
@@ -30,150 +27,117 @@ navbar = dbc.Navbar(id = 'navbar', children = [
     
 ])
 
+# Dropdown Options Descriptions (Front Facing)
+income = ["Less than $25,000",
+          "$25,000 - $34,999",
+          "$35,000 - $49,999",
+          "$50,000 - $74,999",
+          "$75,000 - $99,999",
+          "$100,000 - $149,999",
+          "$150,000 - $199,999",
+          "$200,000 and above"]
 
+workloss = ["No",
+            "Yes"]
 
+mortconf = ["Not at all confident",
+            "Slightly confident",
+            "Moderately confident",
+            "Highly confident",
+            "Payment is/will be deferred"]
 
-body  = html.Div([
-    dbc.Row( [dbc.Col(
-        
-    dbc.Row([
-    html.Div([
-        "Month",
-dcc.Slider(
-        id='month', min=0, max=20,step=1,
-        marks={
-        0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10',
-        11: '11', 12: '12', 13: '13', 14: '14', 15: '15', 16: '16', 17: '17', 18: '18', 19: '19', 20: '20'
-        },
-        value=1,
-    ),
-      #  dcc.Dropdown(id="month", value=1,
-      #                   options=[{'label':x, 'value':x}
-     #                           for x in [i for i in range(10)]]),
-    ]),
-    html.Div([
-        "Birth Year",
-    dcc.Slider(
-        id='birth_year', min=0, max=20,step=1,
-        marks={
-        0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10',
-        11: '11', 12: '12', 13: '13', 14: '14', 15: '15', 16: '16', 17: '17', 18: '18', 19: '19', 20: '20'
-        },
-        value=2,
-    ),
-        #dcc.Dropdown(id="birth_year", value=2,
-         #                options=[{'label':x, 'value':x}
-          #                        for x in [i for i in range(10)]]),
-    ]),
-    html.Div([
-        "Eductation",
-    dcc.Slider(
-        id='eeduc', min=0, max=20,step=1,
-        marks={
-        0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10',
-        11: '11', 12: '12', 13: '13', 14: '14', 15: '15', 16: '16', 17: '17', 18: '18', 19: '19', 20: '20'
-        },
-        value=3,
-    ),
-        #dcc.Dropdown(id="eeduc", value=3,
-         #                options=[{'label':x, 'value':x}
-          #                        for x in [i for i in range(10)]])
-    ]),
-    html.Div([
-        "Mortgage Last Month",
-    dcc.Slider(
-        id='mortlmth', min=0, max=10,step=1,
-        marks={
-        0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10',
-        11: '11', 12: '12', 13: '13', 14: '14', 15: '15', 16: '16', 17: '17', 18: '18', 19: '19', 20: '20'
-        },
-        value=4,
-    ),
-        #dcc.Dropdown(id="mortlmth", value=4,
-         #                options=[{'label':x, 'value':x}
-          #                        for x in [i for i in range(10)]]),
-    ]),
-    html.Div([
-        "Mortgage Confidence",
-    dcc.Slider(
-        id='mortconf', min=0, max=10,step=1,
-        marks={
-        0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10',
-        11: '11', 12: '12', 13: '13', 14: '14', 15: '15', 16: '16', 17: '17', 18: '18', 19: '19', 20: '20'
-        },
-        value=6,
-    ),
-        #dcc.Dropdown(id="mortconf", value=6,
-         #                options=[{'label':x, 'value':x}
-          #                        for x in [i for i in range(10)]]),
-    ]),
-    html.Div([
-        "Income",
-    dcc.Slider(
-        id='income', min=0, max=10,step=1,
-        marks={
-        0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10',
-        11: '11', 12: '12', 13: '13', 14: '14', 15: '15', 16: '16', 17: '17', 18: '18', 19: '19', 20: '20'
-        },
-        value=7,
-    ),
-        #dcc.Dropdown(id="income", value=7,
-         #                options=[{'label':x, 'value':x}
-          #                        for x in [i for i in range(10)]]),
-    ]),
-    html.Div([
-        "Type of Work",
-    dcc.Slider(
-        id='type_work', min=0, max=10,step=1,
-        marks={
-        0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10',
-        11: '11', 12: '12', 13: '13', 14: '14', 15: '15', 16: '16', 17: '17', 18: '18', 19: '19', 20: '20'
-        },
-        value=2,
-    ),
-        #dcc.Dropdown(id="type_work",  value=2,
-         #                options=[{'label':x, 'value':x}
-          #                        for x in [i for i in range(10)]]),
+mortlmth = ["Yes",
+            "No"]
 
-    ]),
-    #html.Div([dbc.Button('Predict', id='predict_submit', n_clicks=0, size='lg', style={"background":"#3e1e4f", "color":"#fff", "border-color":"#3e1e4f", "min-width":"240px" })], style={"text-align":"center", "padding":"15px" }),
-    ])
-    
-    #, style={"height": "50%"}
-    , width={'size':3,'offset':1,'order':1}#xs=12, sm=12, md=12, lg=3, xl=3
-        ),
-    dbc.Col(dcc.Graph(id="bar_chart_pred", figure={}), width={'size':6,'offset':1,'order':2} #xs=12, sm=12, md=12, lg=7, xl=7
-         )])
-   
+lockdown = ["0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"]
+
+body = html.Div([
+    dbc.Row([dbc.Col(
+        dbc.Row([
+            html.Div([
+                "Did you pay last month's mortgage or rent?",
+                dcc.Dropdown(id="mortlmth",
+                             options=[{'label': value, 'value': indx}
+                                      for indx, value in enumerate(mortlmth)]),
+            ]),
+            html.Div([
+                "Are you confident that you will pay your mortgage/rent next month?",
+                dcc.Dropdown(id="mortconf",
+                             options=[{'label': value, 'value': indx}
+                                      for indx, value in enumerate(mortconf)]),
+            ]),
+            html.Div([
+                "Income",
+                dcc.Dropdown(id="income",
+                             options=[{'label': value, 'value': indx}
+                                      for indx, value in enumerate(income)]),
+            ]),
+            html.Div([
+                "Lockdown Level",
+                dcc.Dropdown(id="lockdown",
+                             options=[{'label': value, 'value': indx}
+                                      for indx, value in enumerate(lockdown)]),
+            ]),
+            html.Div([
+                "Have you experienced recent household job loss?",
+                dcc.Dropdown(id="workloss",
+                             options=[{'label': value, 'value': indx}
+                                      for indx, value in enumerate(workloss)]),
+
+            ]),
+        ])
+
+        , style={"height": "50%"}, lg=3),
+        dbc.Col(dcc.Graph(id="bar_chart_pred", figure={}))])
 ])
 
+app.layout = html.Div(id='parent', children=[navbar, body])
 
-app.layout = html.Div(id = 'parant', children = [navbar, body])
 
 @app.callback(
-    Output("bar_chart_pred", "figure"), 
-    [#Input("predict_submit", 'n_clicks'),
-    Input("month", "value"),
-    Input("birth_year", "value"),
-    Input("eeduc", "value"),
-    Input("mortlmth", "value"),
-    Input("mortconf", "value"),
-    Input("income", "value"),
-    Input("type_work", "value"),
-    ])
-def update_barchart(month, birth_year, eeduc,
-                    mortlmth, mortconf, income,
-                    typework): #predict_submit
+    Output("bar_chart_pred", "figure"),
+     [Input("income", "value"),
+     Input("workloss", "value"),
+     Input("mortconf", "value"),
+     Input("mortlmth", "value"),
+     Input("lockdown", "value"),
+     ])
+def update_barchart(income, wrkloss, mortconf, mortlmth, lockdown):
 
-    print("Button Clicked!!!!!!!")
-    Features = ["eeduc", "mortlmth", "mortconf", "income","typework", "prediction", "CDC"]
-    
-    prediction = eeduc + mortlmth + mortconf + income + typework
-    print(prediction)
+    features = np.array([income, wrkloss, mortconf, mortlmth, lockdown])
+    features[features == None] = 0  # Convert Nones to 0, for when the dropdown option is not selected
+    print(features)
+
+    with open('../models/mental_health_rgr.pickle', 'rb') as handle:
+        rgr = pickle.load(handle)
+
+    print(f'features: {features}')
+    print(type(features))
+
+    # Check if all zeros. If so, prediction = 0
+    is_all_zero = not np.any(features)
+    if is_all_zero:
+        prediction = 0
+    else:
+        prediction = rgr.predict([features])
+        prediction = prediction.item()
+        print(f'Prediction: {prediction}')
+
     cdc = 75
-    print("vipul")
-    df = pd.DataFrame([[0,"Educ", 0, cdc],[1,"Educ", eeduc, cdc],[0,"Mortlmth", 0, cdc], [1,"Mortlmth", mortlmth, cdc], [0,"Mortconf", 0, cdc], [1,"Mortconf", mortconf, cdc],
-                        [0,"Income", 0, cdc], [1,"Income", income, cdc],[0,"Prediction", 0, cdc],[1,"Prediction", prediction, cdc],], columns=["Pos","Features", "Level", "CDC"])
+
+    df = pd.DataFrame([["income", income, cdc],
+                       ["wrkloss", wrkloss, cdc],
+                       ["Mortconf", mortconf, cdc],
+                       ["Mortlmth", mortlmth, cdc],
+                       ["Lockdown", lockdown, cdc],
+                       ["Prediction", prediction, cdc]],
+                      columns=["Features", "Level", "CDC"])
+
     print(df)
     """
     fig = px.bar(df, x = "Features", y="Level"
@@ -191,14 +155,14 @@ def update_barchart(month, birth_year, eeduc,
         title={'text': "Depression Meter", 'font': {'size': 24}},
         delta={'reference': 20, 'increasing': {'color': "RebeccaPurple"}},
         gauge={
-            'axis': {'range': [None, 40], 'tickwidth': 1, 'tickcolor': "darkblue"},
+            'axis': {'range': [None, 10], 'tickwidth': 1, 'tickcolor': "darkblue"},
             'bar': {'color': "darkblue"},
             'bgcolor': "white",
             'borderwidth': 2,
             'bordercolor': "gray",
             'steps': [
-                {'range': [0, 20], 'color': 'cyan'},
-                {'range': [20, 25], 'color': 'red'},
+                {'range': [0, 7.5], 'color': 'cyan'},
+                {'range': [7.5, 10], 'color': 'red'},
                 {'range': [25, 40], 'color': 'royalblue'}],
             'threshold': {
                 'line': {'color': "red", 'width': 4},

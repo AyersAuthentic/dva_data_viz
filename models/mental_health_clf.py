@@ -53,12 +53,6 @@ def mental_health_clf():
             'WRKLOSS',
             'MORTCONF',
             'MORTLMTH',
-            'CDCCOUNT',
-            'KINDWORK_1',
-            'KINDWORK_2',
-            'KINDWORK_3',
-            'KINDWORK_4',
-            'KINDWORK_5',
             'lockdown',
             'MSI']
 
@@ -66,7 +60,7 @@ def mental_health_clf():
 
     # Undersample to balance class distributions
     undersamp = RandomUnderSampler(sampling_strategy='majority')
-    X, y = undersamp.fit_resample(df.iloc[:, :11], df.iloc[:, -1])
+    X, y = undersamp.fit_resample(df.iloc[:, :5], df.iloc[:, -1])
     X, y, = shuffle(X, y)
 
     # Train Test Split
@@ -83,7 +77,7 @@ def mental_health_clf():
         param_grid = {'max_depth': list(range(1, 20)),
                       'n_estimators': list(range(100, 400, 50)),
                       'criterion': ['gini', 'entropy'],
-                      'min_samples_split': list(range(1, 70)),
+                      'min_samples_split': list(range(2, 70)),
                       'min_samples_leaf': list(range(5, 50))}
 
         rf = RandomForestClassifier(n_jobs=-1)
