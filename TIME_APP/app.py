@@ -36,7 +36,7 @@ states_list = [ 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA'
            'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
            'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM',
            'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
-           'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY', 'ALL']
+           'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
 
 features = ['Covid Cases Per 100k', 'Covid Deaths Per 100k', 
             'People Vaccinated Per 100k', 
@@ -75,7 +75,7 @@ body  = html.Div([
                  for x in features],
         value=['Covid Cases Per 100k','People Fully Vaccinated Per 100k'],
     ),
-    dcc.Dropdown(id='state_drop', multi=True, value='CA',
+    dcc.Dropdown(id='state_drop', multi=False, value='CA',
                     options=[{'label':x, 'value':x}
                             for x in states_list],
                     ),
@@ -136,5 +136,5 @@ def filter_heatmap(cols, states):
 
 
 if __name__=='__main__':
-    # app.run_server(debug=False, host="0.0.0.0", port=8080)
-    app.run_server(debug=True)
+    app.run_server(debug=False, host="0.0.0.0", port=8080)
+    #app.run_server(debug=True)
