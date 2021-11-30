@@ -47,7 +47,7 @@ features = ['Covid Cases Per 100k', 'Covid Deaths Per 100k',
             'Remote Work Percentage']
 
 feature_dict = {'Covid Cases Per 100k': 'cases_avg_per_100k',
-             'Covid Deaths Per 100k': 'deaths_avg_per_100k ', 
+             'Covid Deaths Per 100k': 'deaths_avg_per_100k',
             'People Vaccinated Per 100k': 'people_vaccinated_per_hundred', 
             'People Fully Vaccinated Per 100k': 'people_fully_vaccinated_per_hundred',
             'Levels of Lockdown': 'lockdown',
