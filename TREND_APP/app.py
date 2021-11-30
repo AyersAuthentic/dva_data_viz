@@ -20,10 +20,12 @@ df = pd.read_csv("https://storage.googleapis.com/additional-data/data_viz_data/t
 df_2 = pd.read_csv("https://storage.googleapis.com/additional-data/data_viz_data/trends/lock_clean.csv", dtype={"fips": str})
 df_3 = pd.read_csv("https://storage.googleapis.com/additional-data/data_viz_data/trends/master_viz_test.csv")
 df_4 = pd.read_csv("https://storage.googleapis.com/additional-data/data_viz_data/trends/master_viz_test_2.csv")
+df_5 = pd.read_csv("https://storage.googleapis.com/additional-data/agg_full.csv")
 print(df.head(5))
 print(df_2.head(5))
 print(df_3.head(5))
 print(df_4.head(5))
+print(df_5.head(5))
 trends = ['WRKLOSS', 'KINDWORK', 'MORTLMTH', 'MORTCONF',
        'INCOME', 'CDCCOUNT', 'REMPCT', 'people_vaccinated',
        'people_vaccinated_per_hundred', 'people_fully_vaccinated',
@@ -47,6 +49,25 @@ navbar = dbc.Navbar(id = 'navbar', children = [
     
 ])
 
+fig1= px.choropleth(df_5, locations='STATE_C', color=df_5["ANXWORRYDWN_NUM"],
+                      color_continuous_scale="ylorbr",
+                      range_color=(df_5["ANXWORRYDWN_NUM"].min(), df_5["ANXWORRYDWN_NUM"].max()),
+                      locationmode="USA-states",
+                      animation_group="YEARMONTH",
+                      animation_frame="YEARMONTH",
+                      scope="usa" #,
+                      #labels={trend: trend}
+                      )
+
+fig2= px.choropleth(df_5, locations='STATE_C', color=df_5["ANXWORRYDWN_NUM_PRED"],
+                      color_continuous_scale="ylorbr",
+                      range_color=(df_5["ANXWORRYDWN_NUM_PRED"].min(), df_5["ANXWORRYDWN_NUM_PRED"].max()),
+                      locationmode="USA-states",
+                      animation_group="YEARMONTH",
+                      animation_frame="YEARMONTH",
+                      scope="usa" #,
+                      #labels={trend: trend}
+                      )
 
 
 body = dbc.Container([
@@ -59,6 +80,18 @@ body = dbc.Container([
                      ),
         dcc.Graph(id='covid_trends_X', figure={})
 
+    ]),
+    dbc.Row([
+        dbc.Col([
+            dcc.Graph(id='covid_trends_Y',figure=fig1)
+            ], #width={'size':6,'offset':1,'order':1}
+            xs=12, sm=12, md=12, lg=6, xl=6
+        ),
+        dbc.Col([
+            dcc.Graph(id='covid_trends_Z',figure=fig2)
+            ], #width={'size':6,'offset':1,'order':1}
+            xs=12, sm=12, md=12, lg=6, xl=6
+        )
     ]),
     dbc.Row([
 
