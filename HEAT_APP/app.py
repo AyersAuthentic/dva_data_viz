@@ -33,9 +33,8 @@ app = dash.Dash(external_stylesheets = [ dbc.themes.COSMO],)
 
 navbar = dbc.Navbar(id = 'navbar', children = [
 
-        dbc.Col(html.H1("Data Correlations Heatmap Analysis",
-                        className='text-center text-primary mb=4'
-        ), width=12)
+        dbc.Col(
+         width=12)
     
 ])
 
