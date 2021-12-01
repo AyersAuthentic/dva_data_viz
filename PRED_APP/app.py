@@ -112,7 +112,7 @@ body = html.Div([
         #, style={"height": "50%"}
         ,xs={'size':10,'offset':1,'order':1}, sm={'size':10,'offset':1,'order':1}, md={'size':4,'offset':1,'order':2}, lg={'size':4,'offset':1,'order':2} , xl={'size':4,'offset':1,'order':2}),
         dbc.Col(dcc.Graph(id="bar_chart_pred", figure={}), xs={'size':10,'offset':1,'order':1}, sm={'size':10,'offset':1,'order':1}, md={'size':5,'offset':1,'order':2}, lg={'size':5,'offset':1,'order':2} , xl={'size':5,'offset':1,'order':2})]
-    , style={"padding": "50px 0", "background-color": "#e9ecef"})
+    ,style={"background-color": "#c5cbd0","padding-bottom": "10px","margin-bottom": "50px"})
 ])
 
 app.layout = html.Div(id='parent', children=[navbar, body])
