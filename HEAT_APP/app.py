@@ -40,23 +40,33 @@ navbar = dbc.Navbar(id = 'navbar', children = [
 ])
 
 
-
-
-body  = html.Div([
-    html.P("Attributes Included:"),
-    dcc.Checklist(
-        id='attributes',
-        options=[{'label': x, 'value': x} 
-                 for x in df.columns[7:]],
-        value=['people_vaccinated_per_hundred','CDCCOUNT'],
-    ),
-    dcc.Dropdown(id='state_drop', multi=True, value='CA',
+body  = dbc.Row([
+        html.H1([
+                "Data Correlations Heatmap Analysis",
+            ],style={"padding": "25px, 0,25px , 0","text-align": "center","background-color": "rgb(233 236 239)","color": "#b8632a"}),
+        dbc.Col([
+        html.P(""),
+        html.H4("Select the State for Visualization:"),
+        dcc.Dropdown(id='state_drop', multi=True, value='CA',
                     options=[{'label':x, 'value':x}
                             for x in states_with_all],
-                    ),
-    dcc.Graph(id="graph", figure={}),
-])
 
+                    ),
+        html.P(""),
+        html.H4("Select the Features for Visualization:"),
+
+        dcc.Checklist(
+            id='attributes',
+            options=[{'label': x, 'value': x}
+                    for x in df.columns[7:]],
+            value=['people_vaccinated_per_hundred','CDCCOUNT'],
+            labelStyle={'margin-right': '70px', 'margin-left': '3px'}
+        )
+        ],width={'size':3,'offset':1,'order':1}),
+        dbc.Col([
+        dcc.Graph(id="graph", figure={})
+        ],width={'size':8,'offset':0,'order':2})
+    ],style={"background-color": "#c5cbd0","padding-bottom": "10px","margin-bottom": "50px"})
 
 app.layout = html.Div(id = 'parant', children = [navbar, body])
 
