@@ -60,38 +60,39 @@ feature_dict = {'Covid Cases Per 100k': 'cases_avg_per_100k',
 
 navbar = dbc.Navbar(id = 'navbar', children = [
 
-        dbc.Col(html.H1("Covid Time Series Analysis",
+        dbc.Col(html.H1("Time Series Analysis",
                         className='text-center text-primary mb=4'
         ), width=12)
     
 ])
 
 
-body  = html.Div([
-    dbc.Row([ html.P("Import Features of Covid 19:"),
-    dbc.Col([
-    dcc.Checklist(
-        id='attributes',
-        options=[{'label': x, 'value': x} 
-                 for x in features],
-        value=['Covid Cases Per 100k','People Fully Vaccinated Per 100k'],
-    ),
-    dcc.Dropdown(id='state_drop', multi=False, value='CA',
+body  = dbc.Row([
+        html.H1([
+                "COVID Time Series Trend Visualization",
+            ],style={"padding": "25px, 0,25px , 0","text-align": "center","background-color": "rgb(233 236 239)","color": "#b8632a"}),
+        dbc.Col([
+        html.H4("Select the State for Visualization:"),
+        dcc.Dropdown(id='state_drop', multi=False, value='CA',
                     options=[{'label':x, 'value':x}
-                            for x in states_list],style={"width": "80%"}),
-        
-    ]),
-    
-    dbc.Col([
-    dcc.Graph(id="graph", figure={}),
-    
-    
-        
-    ]),
-    ])
-    
+                            for x in states_list],
+                    style={"width": "50%"},
+                    ),
+        html.P(""),
+        html.H4("Select the Features for Visualization:"),
+        dcc.Checklist(
+            id='attributes',
+            options=[{'label': x, 'value': x}
+                    for x in features],
+            value=['Covid Cases Per 100k','People Fully Vaccinated Per 100k'],
+            labelStyle={'margin-right': '50px','display': 'block'}
+        )
+        ],width={'size':3,'offset':1,'order':1}),
+        dbc.Col([
+        dcc.Graph(id="graph", figure={})
+        ],width={'size':8,'offset':0,'order':2})
+    ],style={"background-color": "#c5cbd0","padding-bottom": "10px","margin-bottom": "50px"})
 
-])
 
 
 app.layout = html.Div(id = 'parant', children = [navbar, body])
