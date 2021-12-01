@@ -68,7 +68,8 @@ navbar = dbc.Navbar(id = 'navbar', children = [
 
 
 body  = html.Div([
-    html.P("Import Features of Covid 19:"),
+    dbc.Row([ html.P("Import Features of Covid 19:"),
+    dbc.Col([
     dcc.Checklist(
         id='attributes',
         options=[{'label': x, 'value': x} 
@@ -77,9 +78,19 @@ body  = html.Div([
     ),
     dcc.Dropdown(id='state_drop', multi=False, value='CA',
                     options=[{'label':x, 'value':x}
-                            for x in states_list],
-                    ),
+                            for x in states_list],style={"width": "80%"}),
+        
+    ]),
+    
+    dbc.Col([
     dcc.Graph(id="graph", figure={}),
+    
+    
+        
+    ]),
+    ])
+    
+
 ])
 
 
