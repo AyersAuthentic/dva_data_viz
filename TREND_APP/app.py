@@ -43,9 +43,7 @@ app = dash.Dash(external_stylesheets = [ dbc.themes.COSMO],)
 
 navbar = dbc.Navbar(id = 'navbar', children = [
 
-        dbc.Col(html.H1("Covid Trends Analysis",
-                        className='text-center text-primary mb=4'
-        ), width=12)
+        dbc.Col(width=12)
     
 ])
 
@@ -158,7 +156,7 @@ body = dbc.Container([
 
 ],fluid=False)
 
-app.layout = html.Div(id = 'parent', children = [body])
+app.layout = html.Div(id = 'parent', children = [navbar, body])
 
 
 # Callbacks
