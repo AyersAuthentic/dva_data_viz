@@ -50,7 +50,11 @@ lockdown = ["0",
             "5"]
 
 body = html.Div([
-    dbc.Row([dbc.Col(
+    dbc.Row([
+        html.H1([
+            "Prediction Application",
+        ],style={"padding": "10px, 0, 25px, 0","text-align": "center","background-color": "rgb(233 236 239)","color": "#b8632a"}),
+        dbc.Col(
         dbc.Row([
             html.Div([
                 "Enter Details to find what are the Chances of your loved ones getting sick due to pandemic stress",
@@ -113,7 +117,7 @@ body = html.Div([
     , style={"padding": "50px 0", "background-color": "#e9ecef"})
 ])
 
-app.layout = html.Div(id='parent', children=[navbar, body])
+app.layout = html.Div(id='parent', children=[body])
 
 
 @app.callback(
