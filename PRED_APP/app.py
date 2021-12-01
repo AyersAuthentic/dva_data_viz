@@ -130,8 +130,8 @@ def update_barchart(income, wrkloss, mortconf, mortlmth, lockdown):
     features = np.array([income, wrkloss, mortconf, mortlmth, lockdown])
     features[features == None] = 0  # Convert Nones to 0, for when the dropdown option is not selected
 
-   
-    rgr = cp.load(urlopen("https://storage.googleapis.com/additional-data/data_viz_data/pickles/mental_health_rgr.pickle", 'rb')) 
+    with open('mental_health_rgr.pickle', 'rb') as handle:
+        rgr = pickle.load(handle)
 
     calc_prediction = 5
     # Check if all zeros. If so, prediction = 0. Else call Regression model's predict.

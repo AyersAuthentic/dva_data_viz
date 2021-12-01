@@ -8,4 +8,5 @@ numpy
 pandas
 pandas-datareader
 plotly
+scikit-learn==1.0.1
 
