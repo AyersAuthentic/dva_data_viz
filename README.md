@@ -1,20 +1,17 @@
 # COVID-19 Remote Work
 
-## Getting Started
-- Install Conda, navigate to the directory with the `environment.yml` file, then use the command `conda env create --name envname --file=environment.yml`.
-Activate this environment with `conda activate envname`
-
 ## Data Storage
 [GCP Data Storage](https://console.cloud.google.com/storage/browser/additional-data)
 
-- Data for all microserves is uploaded and retrieved from a Google Cloud Storage bucket.
+- Data for all microservices is uploaded and retrieved from a Google Cloud Storage bucket.
 
 ## Dash (Data Visualization)
 - Interactive Data Visualization micro services that analyze important trends related to the Covid-19 pandemic.
 
 Each visualization application was developed using the Dash Plotly python framework. Dash is a python framework that facilitates the rapid development and deployment of interactive data visualization applications. Each application is deployed to the Google Cloud Service platform as a serverless microservice that can be easily incorporated into any front-end application using a link placed into an iframe html element. 
 
-## Dash Requirements
+## Requirements
+### Dash Requirements
 - dash
 - dash-bootstrap-components
 - dash-core-components
@@ -25,6 +22,12 @@ Each visualization application was developed using the Dash Plotly python framew
 - pandas
 - pandas-datareader
 - plotly
+
+### ML Modeling Requirements
+- Install Conda
+- Navigate to the directory with the `environment.yml` file 
+- Create the Conda environment from the environment.yml file with `conda env create --name envname --file=environment.yml`
+- Activate this environment with `conda activate envname`
 
 ## Run Local Demo
 
@@ -56,14 +59,14 @@ cd TREND_APP
 python app.py
 ```
 
-- Covid Mental Health Predictin Application
+- Covid Mental Health Prediction Application
 
 ```console
 cd PRED_APP
 python app.py
 ```
 
-## Deploy Microservce Applications to Google Cloud
+## Deploy Microservice Applications to Google Cloud
 - Deployment to the Google Cloud run serverless cloud is facilitated by a Docker container image from within each microservice application file. To submit and deploy each microservice application create a new google cloud project and install the google cloud SDK on your local machine. Once the SDK is installed, enter the application directory and run the console commands below:
 
 - GCC SDK installation instructions:  https://cloud.google.com/sdk/docs/install
@@ -77,8 +80,7 @@ gcloud run deploy --image gcr.io/(GCC-PROJECT-NAME-ID)/app --platform managed  -
 
 ```
 
-
-
-## Models
-- Run `mental_health_clf.py`
-- If you would like to retrain the model, pass in the optional command line argument `--train rf` or `--train xgb`, when you run the script
+## Machine Learning Models
+- Run `mental_health_clf.py` to run the classification model, and view its Test Set Accuracy
+- Run `mental_health_rgr.py` to run the regression model, and view its Test Set Accuracy
+- To retrain the model, pass in the optional command line argument `--train rf` (Random Forest Model) or `--train xgb` (XGBoost Model), when you run the script
