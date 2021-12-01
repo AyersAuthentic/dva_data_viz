@@ -130,7 +130,7 @@ body = dbc.Container([
                     min_date_allowed=date(2020, 1, 21),
                     max_date_allowed=date(2021, 9, 29),
                     initial_visible_month=date(2020, 1, 21),
-                    date=date(2020, 1, 21)
+                    date=date(2020, 9, 19)
                 ),
             ])
         ]),
