@@ -100,7 +100,7 @@ body = dbc.Container([
         dbc.Col([
             dcc.Graph(id='covid_trends_X', figure={})
         ],xs={'size':10,'order':1}, sm={'size':10,'order':1}, md={'size':8,'order':2}, lg={'size':8,'order':2} , xl={'size':8,'order':2})
-    ],style={"background-color": "#c5cbd0","padding-bottom": "10px","margin-bottom": "50px"}),
+    ],style={"background-color": "#c5cbd0","padding-bottom": "10px","margin-bottom": "50px", "padding-top": "10px"}),
     dbc.Row([
         html.H1([
                 "Actual & Predicted Data Trend Visualization of Anxiety Worry and Down Index",
@@ -158,7 +158,7 @@ body = dbc.Container([
 
 ],fluid=False)
 
-app.layout = html.Div(id = 'parent', children = [navbar, body])
+app.layout = html.Div(id = 'parent', children = [body])
 
 
 # Callbacks
