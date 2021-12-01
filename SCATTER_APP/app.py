@@ -30,7 +30,7 @@ app = dash.Dash(external_stylesheets = [ dbc.themes.COSMO],)
 navbar = dbc.Navbar(id = 'navbar', children = [
 
 
-        dbc.Col(html.H1("Covid Scatter Mapbox by County",
+        dbc.Col(html.H1("Scatter Mapbox Analysis",
                         className='text-center text-primary mb=4'
         ), width=12)
     
@@ -42,15 +42,23 @@ navbar = dbc.Navbar(id = 'navbar', children = [
 body = dbc.Container([
 
     dbc.Row([
-        dcc.Graph(id='covid_scatter', figure = {}),
-        dcc.DatePickerSingle(
-        id='my-date-picker-single',
-        min_date_allowed=date(2020, 1, 21),
-        max_date_allowed=date(2021, 9, 29),
-        initial_visible_month=date(2020, 1, 21),
-        date=date(2020, 1, 21)
-    )
-    ], className="h-75")
+        html.H1([
+                "COVID Scatter MapBox by County",
+            ],style={"padding": "25px, 0,25px , 0","text-align": "center","background-color": "rgb(233 236 239)","color": "#b8632a"}),
+        html.Div([
+            html.H3(["Select the Date for Covid Scatter MapBox Visualization"]),
+            html.Span([
+                dcc.DatePickerSingle(
+                    id='my-date-picker-single',
+                    min_date_allowed=date(2020, 1, 21),
+                    max_date_allowed=date(2021, 9, 29),
+                    initial_visible_month=date(2020, 1, 21),
+                    date=date(2020, 9, 19)
+                ),
+            ])
+        ]),
+        dcc.Graph(id='covid_scatter', figure = {})
+    ],style={"background-color": "#c5cbd0","padding-bottom": "10px","margin-bottom": "50px"})
 
 ])
 
@@ -75,7 +83,7 @@ def update_output(date_value):
                   hover_data = ['county','state','cases_avg_per_100k'], 
                   title = 'Average Cases Per 100 Thousand')
 
-        fig.update_layout(mapbox_style="light", mapbox_accesstoken=token, width=1400, height= 500)
+        fig.update_layout(mapbox_style="light", mapbox_accesstoken=token)#, width=1400, height= 500)
         fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
         
