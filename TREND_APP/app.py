@@ -173,6 +173,7 @@ def update_output(date_value):
         date_string = date_object.strftime("%Y-%m-%d")
 
         dff = df[df['date'] == date_string]
+        
 
 
         fig = px.choropleth(dff, geojson=counties, locations='fips', color='cases_avg_per_100k',
@@ -196,10 +197,10 @@ def update_output(date_value):
     if date_value is not None:
         date_object = date.fromisoformat(date_value)
         date_string = date_object.strftime("%-m/%-d/%Y")
-        print(date_string)
+        #print(date_string)
 
         dff = df_2[df_2['date'] == date_string]
-        print(dff.head())
+        #print(dff.head())
 
 
         fig = px.choropleth(dff, geojson=counties, locations='fips', color='lockdown',
@@ -221,11 +222,11 @@ def update_output(date_value):
     Input('trends_dropdown_X', 'value')
 )
 def update_graph(trend):
-    print(trend)
-    print(df_4.shape)
+    #print(trend)
+    #print(df_4.shape)
 
     dff = df_4[['year_month','STATE_CODE', trend]]
-    print(dff)
+    #print(dff)
 
     fig = px.choropleth(dff, locations='STATE_CODE', color=dff[trend],
                             color_continuous_scale="ylorbr",
@@ -250,15 +251,15 @@ def update_graph(trend):
 
 )
 def update_graph(trend, month_year):
-    print(month_year)
-    print(df_3.shape)
+    #print(month_year)
+    #print(df_3.shape)
 
     dff = df_3[df_3['month_year'] == month_year]
-    print("selected")
-    print(dff.head())
+    #print("selected")
+    #print(dff.head())
 
     dff = dff[['STATE_CODE', trend]]
-    print(dff)
+    #print(dff)
 
     fig = px.choropleth(dff, locations='STATE_CODE', color=dff[trend],
                         color_continuous_scale="ylorbr",
@@ -275,4 +276,4 @@ def update_graph(trend, month_year):
 
 if __name__=='__main__':
     #app.run_server(debug=True)
-    app.run_server(debug=False, host="0.0.0.0", port=8080)
+    app.run_server(debug=True, host="0.0.0.0", port=8080)

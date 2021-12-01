@@ -4,6 +4,8 @@ import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output
 import plotly.graph_objects as go
+from urllib.request import urlopen
+import cloudpickle as cp
 
 import pandas as pd
 import numpy as np
@@ -13,7 +15,7 @@ app = dash.Dash(external_stylesheets = [ dbc.themes.COSMO],)
 
 navbar = dbc.Navbar(id = 'navbar', children = [
 
-        dbc.Col(html.H1("Prediction Application Demo",
+        dbc.Col(html.H1("Prediction Application",
                         className='text-center text-primary mb=4'
         ), width=12)
     
@@ -128,8 +130,8 @@ def update_barchart(income, wrkloss, mortconf, mortlmth, lockdown):
     features = np.array([income, wrkloss, mortconf, mortlmth, lockdown])
     features[features == None] = 0  # Convert Nones to 0, for when the dropdown option is not selected
 
-    with open('../models/mental_health_rgr.pickle', 'rb') as handle:
-        rgr = pickle.load(handle)
+   
+    rgr = cp.load(urlopen("https://storage.googleapis.com/additional-data/data_viz_data/pickles/mental_health_rgr.pickle", 'rb')) 
 
     calc_prediction = 5
     # Check if all zeros. If so, prediction = 0. Else call Regression model's predict.
@@ -139,12 +141,12 @@ def update_barchart(income, wrkloss, mortconf, mortlmth, lockdown):
     else:
         prediction = rgr.predict([features])
         prediction = prediction.item()
-        print(f'Prediction: {prediction}')
+        #print(f'Prediction: {prediction}')
         if prediction > 7:
             calc_prediction = ((prediction-7)/2)*100
 
 
-        print(calc_prediction)
+        #print(calc_prediction)
 
     cdc = 75
     barcolor = "Green"
@@ -160,7 +162,7 @@ def update_barchart(income, wrkloss, mortconf, mortlmth, lockdown):
                        ["Prediction", calc_prediction, cdc]],
                       columns=["Features", "Level", "CDC"])
 
-    print(df)
+    #print(df)
 
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
