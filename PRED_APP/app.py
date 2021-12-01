@@ -5,7 +5,6 @@ import dash_core_components as dcc
 from dash.dependencies import Input, Output
 import plotly.graph_objects as go
 from urllib.request import urlopen
-import cloudpickle as cp
 
 import pandas as pd
 import numpy as np
@@ -191,5 +190,5 @@ def update_barchart(income, wrkloss, mortconf, mortlmth, lockdown):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False, host="0.0.0.0", port=8080)
 
