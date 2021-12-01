@@ -30,7 +30,7 @@ app = dash.Dash(external_stylesheets = [ dbc.themes.COSMO],)
 navbar = dbc.Navbar(id = 'navbar', children = [
 
 
-        dbc.Col(html.H1("Covid Analysis Dashboard",
+        dbc.Col(html.H1("Covid Scatter Mapbox by County",
                         className='text-center text-primary mb=4'
         ), width=12)
     
@@ -86,4 +86,4 @@ def update_output(date_value):
 
 
 if __name__=='__main__':
-    app.run_server(host="0.0.0.0", debug=True)
+    app.run_server(debug=False, host="0.0.0.0", port=8080)
