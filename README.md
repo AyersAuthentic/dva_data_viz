@@ -34,6 +34,10 @@ Each visualization application was developed using the Dash Plotly python framew
 - Open any of the *.ipynb* files found within the /models folder.
 - Execute Notebook code. For any additional libraries, if using a Conda environment, use the cmdline to execute `pip install [package name]`. Otherwise, ensure your Python environment has the necessary libraries installed.
 
+### Website Requirements
+- A local copy of the website can be found in the folder *website/startbootstrap-resume-gh-pages*. To run, clone this repository to your local computer and open the `index.html` found within in the browser of your choice (it's recommended to use a modern browser, such as Google Chrome, Mozilla Firefox or Microsoft Edge. Internet Explorer or other browsers may have compatibility issues).
+- Dash Apps are deployed to the website and will run even if opened locally.
+
 
 ## Run Local Demo
 
