@@ -31,7 +31,7 @@ Each visualization application was developed using the Dash Plotly python framew
 
 ### Jupyter Notebook Requirements
 - Install Conda or another Jupyter-enabled environment, using *ML Modeling Requirements* above.
-- Open any of the *.ipynb* files.
+- Open any of the *.ipynb* files found within the /models folder.
 - Execute Notebook code. For any additional libraries, if using a Conda environment, use the cmdline to execute `pip install [package name]`. Otherwise, ensure your Python environment has the necessary libraries installed.
 
 
