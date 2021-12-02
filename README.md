@@ -29,6 +29,12 @@ Each visualization application was developed using the Dash Plotly python framew
 - Create the Conda environment from the environment.yml file with `conda env create --name envname --file=environment.yml`
 - Activate this environment with `conda activate envname`
 
+### Jupyter Notebook Requirements
+- Install Conda or another Jupyter-enabled environment, using *ML Modeling Requirements* above.
+- Open any of the *.ipynb* files.
+- Execute Notebook code. For any additional libraries, if using a Conda environment, use the cmdline to execute `pip install [package name]`. Otherwise, ensure your Python environment has the necessary libraries installed.
+
+
 ## Run Local Demo
 
 - Scatter Mapbox Application
